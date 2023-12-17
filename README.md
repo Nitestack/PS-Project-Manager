@@ -1,6 +1,6 @@
 # Project-Manager
 
-Project manager is a tool that helps you manage your projects by fuzzy finding your project files.
+Project manager is a PowerShell module that helps you manage your projects by fuzzy finding your project files.
 It's using fzf as the fuzzy finder.
 
 ## 🛠️ Installation
