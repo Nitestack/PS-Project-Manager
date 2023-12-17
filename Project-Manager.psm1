@@ -10,7 +10,7 @@ $sub_dirs_env = "PROJECT_MANAGER_SUB_DIRS"
 
 Set-Alias pm Open-Project
 Set-Alias pm-edit Edit-BaseProjectPath
-Set-Alias pm-create Import-Project
+Set-Alias pm-new Import-Project
 Set-Alias pm-delete Remove-Project
 Set-Alias pm-add Add-SubDir
 Set-Alias pm-remove Remove-SubDir
@@ -259,9 +259,3 @@ function Edit-BaseProjectPath()
 }
 
 Export-ModuleMember -Alias * -Function Open-Project, Import-Project, Remove-Project, Add-SubDir, Remove-SubDir, Edit-BaseProjectPath
-
-
-
-
-
-
