@@ -11,7 +11,6 @@ It's using fzf as the fuzzy finder.
 
 ```pwsh
 git clone --depth 1 https://github.com/Nitestack/Project-Manager $env:USERPROFILE\Documents\PowerShell\Modules\Project-Manager
-nvim
 ```
 
 #### Include it in your PowerShell config:
