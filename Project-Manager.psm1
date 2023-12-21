@@ -17,11 +17,13 @@ Set-Alias pm-remove Remove-SubDir
 
 function Confirm-PathExists([string]$path)
 {
+  $path = $(Resolve-Path $path).Path
   # Check if path doesn't exist 
   if (!(Test-Path $path))
   {
     mkdir $path
   }
+  return $path
 }
 
 function Get-BaseProjectPath()
@@ -39,7 +41,7 @@ function Get-BaseProjectPath()
       break
     }
 
-    $resolved_value = Join-Path $env:USERPROFILE $initial_value
+    $resolved_value = Confirm-PathExists $(Join-Path $env:USERPROFILE $initial_value).Path
 
     [System.Environment]::SetEnvironmentVariable($project_base_path_env, $resolved_value, [System.EnvironmentVariableTarget]::User)
 
@@ -48,7 +50,7 @@ function Get-BaseProjectPath()
     return $resolved_value
   } else
   {
-    return $project_base_path
+    return Confirm-PathExists $project_base_path
   }
 }
 
@@ -95,9 +97,14 @@ function Get-SubDirs()
   }
 }
 
+function Get-FullPathSubDirs()
+{
+  return $(Get-SubDirs) | ForEach-Object { Confirm-PathExists $(Join-Path $(Get-BaseProjectPath) $_) }
+}
+
 function Select-Project()
 {
-  $resolved_paths = $(Get-SubDirs) | ForEach-Object { Join-Path $(Get-BaseProjectPath) $_ }
+  $resolved_paths = $(Get-FullPathSubDirs)
 
   $projects = @()
   foreach ($path in $resolved_paths)
@@ -109,7 +116,7 @@ function Select-Project()
     foreach ($directory in $directories)
     {
       # Check if the project path is not in $resolved_paths
-      if ($resolved_paths -notcontains $directory.FullName)
+      if ($resolved_paths -NotContains $directory.FullName)
       {
         $projects += $directory.FullName
       }
@@ -135,7 +142,7 @@ function Open-Project()
 
 function Import-Project()
 {
-  $resolved_paths = $(Get-SubDirs) | ForEach-Object { Join-Path $(Get-BaseProjectPath) $_ }
+  $resolved_paths = $(Get-FullPathSubDirs)
 
   $project_dir_name = Read-Host -Prompt "Enter the project directory name"
   # If the string is empty, close prompt
@@ -259,3 +266,4 @@ function Edit-BaseProjectPath()
 }
 
 Export-ModuleMember -Alias * -Function Open-Project, Import-Project, Remove-Project, Add-SubDir, Remove-SubDir, Edit-BaseProjectPath
+
